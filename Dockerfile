@@ -56,6 +56,8 @@ RUN apt-get install -y zbar-tools
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
 
+COPY ./files ./files
+
 # Expose the port that the application listens on.
 EXPOSE 8000
 
