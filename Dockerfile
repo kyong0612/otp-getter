@@ -52,7 +52,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
 
 RUN apt-get install -y zbar-tools
 
-
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
 
