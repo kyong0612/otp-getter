@@ -2,21 +2,18 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/kyong0612/otp-getter/handler"
 )
 
 func main() {
 	// The HTTP Server
-	server := &http.Server{Addr: "0.0.0.0:8000", Handler: service()}
+	server := &http.Server{Addr: "0.0.0.0:8000", Handler: router()}
 
 	// Server run context
 	serverCtx, serverStopCtx := context.WithCancel(context.Background())
@@ -46,6 +43,8 @@ func main() {
 	}()
 
 	// Run the server
+	fmt.Printf("Server is ready to handle requests at %s\n", "http://localhost:8000")
+
 	err := server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatal(err)
@@ -53,16 +52,4 @@ func main() {
 
 	// Wait for server context to be stopped
 	<-serverCtx.Done()
-}
-
-func service() http.Handler {
-	r := chi.NewRouter()
-
-	r.Use(middleware.RequestID)
-	r.Use(middleware.Logger)
-
-	r.Get("/", handler.GetReadOtpPage)
-	r.Post("/otp", handler.ReadOtpHandler)
-
-	return r
 }
